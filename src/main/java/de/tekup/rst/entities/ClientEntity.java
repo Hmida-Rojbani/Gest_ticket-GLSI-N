@@ -15,7 +15,7 @@ public class ClientEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+	@Column(length = 50)
 	private String nom;
 	private String prenom;
 	private LocalDate dateDeNaissance;
