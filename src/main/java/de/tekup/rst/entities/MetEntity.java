@@ -11,20 +11,20 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Entity
 @Data
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@ToString(exclude = "tickets")
 public abstract class MetEntity {
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	private String nom;
-	private double prix;
 	
+	private double prix;
 	@ManyToMany(mappedBy = "mets")
 	private List<TicketEntity> tickets;
-
 }

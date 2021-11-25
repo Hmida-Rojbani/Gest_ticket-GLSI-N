@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import de.tekup.rst.dto.models.TicketDTO;
 import de.tekup.rst.entities.ClientEntity;
 import de.tekup.rst.entities.MetEntity;
-import de.tekup.rst.entities.Table;
+import de.tekup.rst.entities.TableEntity;
 import de.tekup.rst.entities.TicketEntity;
 import de.tekup.rst.repositories.ClientRepository;
 import de.tekup.rst.repositories.MetRepository;
@@ -28,14 +28,14 @@ public class TicketService {
 	public double createTicket(TicketDTO ticketDTO) {
 		ClientEntity clientEntity = clientRepository
 						.findById(ticketDTO.getClientId()).get();
-		Table table = tableRepository
+		TableEntity table = tableRepository
 				.findById(ticketDTO.getTableNumero()).get();
 		List<MetEntity> mets = metRepository
 				.findAllById(Arrays.asList(ticketDTO.getMetsIds()));
 		
 		double addition=mets.stream()
 						.mapToDouble(met-> met.getPrix())
-						.sum()+table.getSupplements();
+						.sum()+table.getSupplement();
 		
 		TicketEntity ticketEntity = new TicketEntity();
 		ticketEntity.setClient(clientEntity);

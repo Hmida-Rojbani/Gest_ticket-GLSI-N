@@ -1,13 +1,14 @@
 package de.tekup.rst.entities;
 
+import java.util.List;
+
 import javax.persistence.*;
 
-import lombok.Data;
 
+import lombok.Data;
 @Entity
 @Data
-@javax.persistence.Table(name = "tableRest")
-public class Table {
+public class TableEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer numero;
@@ -16,6 +17,9 @@ public class Table {
 	@Enumerated(EnumType.STRING)
 	private TableType type;
 	
-	private double supplements;
+	private double supplement;
+	
+	@OneToMany(mappedBy = "table")
+	private List<TicketEntity> ticktes;
 
 }
