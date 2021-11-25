@@ -1,14 +1,19 @@
 package de.tekup.rst.services;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import de.tekup.rst.dto.models.ClientResDTO;
 import de.tekup.rst.dto.models.MetDTO;
+import de.tekup.rst.entities.ClientEntity;
 import de.tekup.rst.entities.MetEntity;
 import de.tekup.rst.entities.Plat;
+import de.tekup.rst.repositories.ClientRepository;
 import de.tekup.rst.repositories.MetRepository;
 import lombok.AllArgsConstructor;
 
@@ -17,6 +22,7 @@ import lombok.AllArgsConstructor;
 public class StatService {
 
 	private MetRepository metRepository;
+	private ClientRepository clientRepository;
 	private ModelMapper mapper;
 
 	public MetDTO platPlusAcheteeWithQuery(LocalDate debut, LocalDate fin) {
@@ -54,6 +60,18 @@ public class StatService {
 		MetDTO dto = mapper.map(entity, MetDTO.class);
 		dto.setType("Plat");
 		return dto;
+	}
+	
+	public ClientResDTO clientFidele() {
+		
+		List<ClientEntity> clientEntities = clientRepository.findAll();
+		
+		Optional<ClientEntity> opt= clientEntities.stream()
+		.max(Comparator.comparing(client-> client.getTickets().size()));
+		ClientEntity entity = null;
+		if(opt.isPresent())
+			entity = opt.get();
+		return mapper.map(entity, ClientResDTO.class);
 	}
 
 }
