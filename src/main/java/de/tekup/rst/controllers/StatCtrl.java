@@ -20,7 +20,8 @@ public class StatCtrl {
 	public MetDTO getPlatPlusAchetee(@PathVariable String deb,@PathVariable String fin) {
 		LocalDate debDate = LocalDate.parse(deb);
 		LocalDate finDate = LocalDate.parse(fin);
-		return statService.platPlusAchetee(debDate, finDate);
+		//return statService.platPlusAchetee(debDate, finDate);
+		return statService.platPlusAcheteeWithQuery(debDate, finDate);
 	}
 
 }

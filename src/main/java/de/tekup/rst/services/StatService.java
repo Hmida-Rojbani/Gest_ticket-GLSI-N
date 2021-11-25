@@ -15,28 +15,36 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class StatService {
-	
+
 	private MetRepository metRepository;
 	private ModelMapper mapper;
-	
+
+	public MetDTO platPlusAcheteeWithQuery(LocalDate debut, LocalDate fin) {
+
+		MetEntity entity = metRepository.platPlutAcheter(debut, fin);
+
+		MetDTO dto = mapper.map(entity, MetDTO.class);
+		dto.setType("Plat");
+		return dto;
+	}
+
 	public MetDTO platPlusAchetee(LocalDate debut, LocalDate fin) {
-		
+
 		List<MetEntity> mets = metRepository.findAll();
 		System.out.println(mets);
-		//locate Plat objects
+		// locate Plat objects
 		mets.removeIf(met -> !(met instanceof Plat));
 		System.out.println(mets);
-		
+
 		for (MetEntity metEntity : mets) {
-			//remove tickets out of period
-			metEntity.getTickets()
-			.removeIf(t -> t.getDateTime().toLocalDate().isBefore(debut) ||
-					t.getDateTime().toLocalDate().isAfter(fin));
+			// remove tickets out of period
+			metEntity.getTickets().removeIf(
+					t -> t.getDateTime().toLocalDate().isBefore(debut) || t.getDateTime().toLocalDate().isAfter(fin));
 		}
-		
+
 		int max = -1;
 		MetEntity entity = null;
-		
+
 		for (MetEntity metEntity : mets) {
 			if (metEntity.getTickets().size() > max) {
 				max = metEntity.getTickets().size();
@@ -47,7 +55,5 @@ public class StatService {
 		dto.setType("Plat");
 		return dto;
 	}
-	
-	
 
 }
