@@ -23,6 +23,7 @@ import de.tekup.rst.entities.Plat;
 import de.tekup.rst.entities.TicketEntity;
 import de.tekup.rst.repositories.ClientRepository;
 import de.tekup.rst.repositories.MetRepository;
+import de.tekup.rst.repositories.TicketRepository;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -31,6 +32,7 @@ public class StatService {
 
 	private MetRepository metRepository;
 	private ClientRepository clientRepository;
+	private TicketRepository ticketRepository;
 	private ModelMapper mapper;
 
 	public MetDTO platPlusAcheteeWithQuery(LocalDate debut, LocalDate fin) {
@@ -104,6 +106,26 @@ public class StatService {
 		
 		
 		return day.getDisplayName(TextStyle.FULL, new Locale("fr"));
+	}
+	
+	
+	public Map<String, Double> revenue(){
+		List<TicketEntity> tickets = ticketRepository.findAll();
+		LocalDate today = LocalDate.now();
+		
+		double todayAddition = tickets.stream()
+					.filter(t -> t.getDateTime().toLocalDate().isEqual(today))
+					.mapToDouble( t -> t.getAddition())
+					.sum();
+		
+		double monthAddition = tickets.stream()
+					.filter(t -> t.getDateTime().getMonthValue() == today.getMonthValue() 
+					&& t.getDateTime().getYear() == today.getYear())
+					.mapToDouble(TicketEntity::getAddition)
+					.sum();
+		
+		
+		return null;
 	}
 
 }
