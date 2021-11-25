@@ -24,4 +24,8 @@ public class StatCtrl {
 		return statService.platPlusAcheteeWithQuery(debDate, finDate);
 	}
 
+	@GetMapping("/api/stats/client/jour/{id}")
+	public String clientJour(@PathVariable int id) {
+		return statService.jourClient(id);
+	}
 }

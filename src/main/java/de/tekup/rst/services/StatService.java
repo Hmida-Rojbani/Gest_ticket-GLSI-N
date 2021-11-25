@@ -1,9 +1,16 @@
 package de.tekup.rst.services;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -13,6 +20,7 @@ import de.tekup.rst.dto.models.MetDTO;
 import de.tekup.rst.entities.ClientEntity;
 import de.tekup.rst.entities.MetEntity;
 import de.tekup.rst.entities.Plat;
+import de.tekup.rst.entities.TicketEntity;
 import de.tekup.rst.repositories.ClientRepository;
 import de.tekup.rst.repositories.MetRepository;
 import lombok.AllArgsConstructor;
@@ -72,6 +80,30 @@ public class StatService {
 		if(opt.isPresent())
 			entity = opt.get();
 		return mapper.map(entity, ClientResDTO.class);
+	}
+	
+	public String jourClient(int id) {
+		
+		ClientEntity clientEntity = clientRepository.findById(id).get();
+		List<TicketEntity> tickets = clientEntity.getTickets();
+		
+		List<DayOfWeek> days = tickets.stream()
+								.map(t -> t.getDateTime().getDayOfWeek())
+								.collect(Collectors.toList());
+		System.out.println(days);
+		
+		Map<DayOfWeek, Long> map = days.stream()
+		.collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
+		System.out.println(map);
+		
+		Entry<DayOfWeek,Long> ent = map.entrySet().stream()
+					.max(Map.Entry.comparingByValue())
+					.get();
+		System.out.println(ent);
+		DayOfWeek day = ent.getKey();
+		
+		
+		return day.getDisplayName(TextStyle.FULL, new Locale("fr"));
 	}
 
 }
