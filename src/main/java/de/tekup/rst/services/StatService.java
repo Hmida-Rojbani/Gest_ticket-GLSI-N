@@ -3,7 +3,10 @@ package de.tekup.rst.services;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -124,8 +127,21 @@ public class StatService {
 					.mapToDouble(TicketEntity::getAddition)
 					.sum();
 		
+		TemporalField weekOfYear = WeekFields.ISO.weekOfWeekBasedYear();
 		
-		return null;
+		double weekAddition = tickets.stream()
+				.filter(t -> t.getDateTime().get(weekOfYear) == today.get(weekOfYear) 
+				&& t.getDateTime().getYear() == today.getYear())
+				.mapToDouble(TicketEntity::getAddition)
+				.sum();
+		
+		Map<String, Double> map = new HashMap<>();
+		
+		map.put("Jour", todayAddition);
+		map.put("Semaine", weekAddition);
+		map.put("Mois", monthAddition);
+		
+		return map;
 	}
 
 }
