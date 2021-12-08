@@ -1,14 +1,14 @@
 package de.tekup.rst.services;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import de.tekup.rst.dto.models.TableDTO;
 import de.tekup.rst.entities.TableEntity;
-import de.tekup.rst.entities.TableType;
 import de.tekup.rst.repositories.TableRepository;
 import lombok.AllArgsConstructor;
 
@@ -21,6 +21,13 @@ public class TableService {
 	
 	public void addTable(TableDTO dto) {
 		tableRepository.save(mapper.map(dto, TableEntity.class));
+	}
+	
+	public List<TableDTO> getAllTables(){
+		return tableRepository.findAll()
+					.stream()
+					.map(te -> mapper.map(te, TableDTO.class))
+					.collect(Collectors.toList());
 	}
  
 }
